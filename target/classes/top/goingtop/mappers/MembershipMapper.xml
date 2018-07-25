@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.MembershipDao">
+	<resultMap type="Membership" id="MembershipResult">
+		<association property="user" column="userId" select="top.goingtop.dao.UserDao.findById"/>
+		<association property="group" column="groupId" select="top.goingtop.dao.JurisdictionDao.findById"/>
+	</resultMap>
+	<select id="login" parameterType="Map" resultMap="MembershipResult">
+		SELECT ms.userId AS userId,ms.groupId AS groupId FROM `user` AS u,`jurisdiction` AS g,`membership` AS ms WHERE ms.`userID`=u.`id` AND ms.`GROUPID`=g.`ID` AND u.`id`=#{id} AND u.`password`=#{password} AND g.`ID`=#{groupId}
+	</select>
+	<select id="findUserByGroupId" parameterType="String" resultMap="MembershipResult">
+		SELECT ms.`userId` AS userId,ms.`groupId` AS groupId  FROM `user` AS u,`jurisdiction` AS g,`membership` AS ms WHERE ms.`userId`=u.`ID` AND ms.`groupId`=g.`ID` AND g.`ID`=#{groupId}
+	</select>
+	<select id="findGroupByUserId" parameterType="String" resultMap="MembershipResult">
+		SELECT ms.`userId` AS userId,ms.`groupId` AS groupId FROM `user` AS u,`jurisdiction` AS g,`membership` AS ms WHERE ms.`userId`=u.`ID` AND ms.`groupId`=g.`ID` AND u.id=#{userId}
+	</select>
+	<delete id="deleteAllGroupsByUserId" parameterType="String">
+		delete from membership where userId=#{userId}
+	</delete>
+	<insert id="add" parameterType="Membership">
+		insert into membership values(#{user.id},#{group.id})
+	</insert>
+</mapper> 

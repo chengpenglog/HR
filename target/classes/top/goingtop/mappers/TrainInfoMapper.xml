@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.TrainInfoDao">
+	<resultMap type="TrainInfo" id="TrainInfoResult">
+		<result property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="employerId" column="employerId"/>
+		<result property="trainContent" column="trainContent"/>
+		<result property="startTime" column="startTime"/>
+		<result property="endTime" column="endTime"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="TrainInfoResult">
+		select * from traininfo where id=#{id}
+	</select>
+	<select id="list" parameterType="Map" resultMap="TrainInfoResult">
+		select * from traininfo
+			<where>
+			<if test="trainContent!=null and trainContent!='' ">
+				 and trainContent like #{trainContent}
+			</if>
+			<if test="employerId!=null and employerId!='' ">
+				 and employerId = #{employerId}
+			</if>
+			 <if test="startSearch!=null and startSearch!=''">
+		     	 and startTime between #{startSearch}  and #{endSearch} 
+		     </if>
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from traininfo
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="TrainInfo">
+		insert into traininfo values(null,#{type},#{employerId},#{trainContent},#{startTime},#{endTime})
+	</insert>
+	<update id="update" parameterType="TrainInfo">
+		update traininfo
+		<set>
+			<if test="type!=null and type!=''">
+				type=#{type},
+			</if>
+			<if test="employerId!=null and employerId!=''">
+				employerId=#{employerId},
+			</if>
+			<if test="trainContent!=null and trainContent!=''">
+				trainContent=#{trainContent},
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				startTime=#{startTime},
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				endTime=#{endTime},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from traininfo where id=#{id}
+	</delete>
+</mapper> 

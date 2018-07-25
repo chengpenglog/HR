@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.CheckDao">
+	<resultMap type="Check" id="CheckResult">
+		<result property="id" column="id"/>
+		<result property="employerId" column="employerId"/>
+		<result property="type" column="type"/>
+		<result property="money" column="money"/>
+		<result property="checkTime" column="checkTime"/>
+	</resultMap>
+	<select id="getBonus" parameterType="Check" resultType="Integer">
+		SELECT SUM(money) as money FROM `check` WHERE employerId=#{employerId} AND checkTime BETWEEN #{startMonth} AND #{endMonth} 
+	</select>
+	<select id="findById" parameterType="Check" resultMap="CheckResult">
+		select * from `check` where id=#{id}
+	</select>
+	<select id="getFine" parameterType="Check" resultType="Integer">
+		SELECT SUM(money) as money FROM `check` WHERE employerId=#{employerId} AND money>0 AND checkTime BETWEEN #{startMonth} AND #{endMonth}
+	</select>
+	<select id="find" parameterType="Map" resultMap="CheckResult">
+		select * from `check`
+			<where>
+			<if test="type!=null and type!='' ">
+				 and type = #{type}
+			</if>
+			<if test="employerId!=null and employerId!='' ">
+				 and employerId like #{employerId}
+			</if>
+			<if test="startSearch!=null and startSearch!=''">
+		     	 and checkTime between #{startSearch}  and #{endSearch} 
+		     </if>
+		</where>
+		ORDER BY checkTime DESC
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from `check`
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="Check">
+		insert into `check` values(null,#{employerId},#{type},#{money},#{checkTime})
+	</insert>
+	<update id="update" parameterType="Check">
+		update `check`
+		<set>
+			<if test="employerId!=null and employerId!=''">
+				employerId=#{employerId},
+			</if>
+			<if test="type!=null and type!=''">
+				type=#{type},
+			</if>
+			<if test="money!=null and money!=''">
+				money=#{money},
+			</if>
+			<if test="checkTime!=null and checkTime!=''">
+				checkTime=#{checkTime},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from `check` where id=#{id}
+	</delete>
+</mapper> 

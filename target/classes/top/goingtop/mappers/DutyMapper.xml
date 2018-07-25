@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.DutyDao">
+	<resultMap type="Duty" id="DutyResult">
+		<result property="id" column="id"/>
+		<result property="dutyName" column="dutyName"/>
+		<result property="fixNum" column="fixNum"/>
+		<result property="lackNum" column="lackNum"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="DutyResult">
+		select * from duty where id=#{id}
+	</select>
+	<select id="findIdByName" parameterType="String" resultMap="DutyResult">
+		select * from duty where dutyName=#{dutyName}
+	</select>
+	<select id="findIsLackDuty" resultMap="DutyResult">
+		select * from duty where lackNum>0
+	</select>
+	<select id="list" parameterType="Map" resultMap="DutyResult">
+		select * from duty
+			<where>
+			<if test="dutyName!=null and dutyName!='' ">
+				 and dutyName like #{dutyName}
+			</if>
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from duty
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="Duty">
+		insert into duty values(null,#{dutyName},#{fixNum},#{lackNum})
+	</insert>
+	<update id="update" parameterType="Duty">
+		update duty
+		<set>
+			<if test="dutyName!=null and dutyName!=''">
+				dutyName=#{dutyName},
+			</if>
+			<if test="fixNum!=null and fixNum!=''">
+				fixNum=#{fixNum},
+			</if>
+			<if test="lackNum!=null and lackNum!=''">
+				lackNum=#{lackNum},
+			</if>
+		</set>
+		where ID=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from duty where id=#{id}
+	</delete>
+</mapper> 

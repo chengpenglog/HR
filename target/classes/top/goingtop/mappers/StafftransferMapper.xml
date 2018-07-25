@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.StafftransferDao">
+	<resultMap type="Stafftransfer" id="StafftransferResult">
+		<result property="id" column="id"/>
+		<result property="employerId" column="employerId"/>
+		<result property="oldJob" column="oldJob"/>
+		<result property="newJob" column="newJob"/>
+		<result property="staffTime" column="staffTime"/>
+		<result property="staffReason" column="staffReason"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="StafftransferResult">
+		select * from stafftransfer where id=#{id}
+	</select>
+	<select id="find" parameterType="Map" resultMap="StafftransferResult">
+		select * from stafftransfer
+			<where>
+			<if test="employerId!=null and employerId!='' ">
+				 and employerId like #{employerId}
+			</if>
+		</where>
+		ORDER BY staffTime DESC
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from stafftransfer
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="Stafftransfer">
+		insert into stafftransfer values(null,#{employerId},#{oldJob},#{newJob},#{staffTime},#{staffReason})
+	</insert>
+	<update id="update" parameterType="Stafftransfer">
+		update stafftransfer
+		<set>
+			<if test="employerId!=null and employerId!=''">
+				employerId=#{employerId},
+			</if>
+			<if test="oldJob!=null and oldJob!=''">
+				oldJob=#{oldJob},
+			</if>
+			<if test="newJob!=null and newJob!=''">
+				newJob=#{newJob},
+			</if>
+			<if test="staffTime!=null and staffTime!=''">
+				staffTime=#{staffTime},
+			</if>
+			<if test="staffReason!=null and staffReason!=''">
+				staffReason=#{staffReason},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from stafftransfer where id=#{id}
+	</delete>
+</mapper> 

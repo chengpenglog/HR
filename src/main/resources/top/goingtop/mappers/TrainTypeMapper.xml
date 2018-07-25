@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.TrainTypeDao">
+	<resultMap type="TrainType" id="TrainTypeResult">
+		<result property="id" column="id"/>
+		<result property="type" column="employerId"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="TrainTypeResult">
+		select * from traintype where id=#{id}
+	</select>
+	<select id="list" parameterType="Map" resultMap="TrainTypeResult">
+		select * from traintype
+			<where>
+			<if test="type!=null and type!='' ">
+				 and type like #{type}
+			</if>
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from traintype
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="TrainType">
+		insert into traintype values(null,#{type},#{remark})
+	</insert>
+	<update id="update" parameterType="TrainType">
+		update traintype
+		<set>
+			<if test="type!=null and type!=''">
+				type=#{type},
+			</if>
+			<if test="remark!=null and remark!=''">
+				remark=#{remark},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from traintype where id=#{id}
+	</delete>
+</mapper> 

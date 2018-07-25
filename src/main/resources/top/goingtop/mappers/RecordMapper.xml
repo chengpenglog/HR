@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.RecordDao">
+	<resultMap type="Record" id="RecordResult">
+		<result property="id" column="id"/>
+		<result property="recordName" column="recordName"/>
+		<result property="content" column="content"/>
+		<result property="remark" column="remark"/>
+		<result property="employerId" column="employerId"/>
+	</resultMap>
+	<select id="findByEmployerId" parameterType="String" resultMap="RecordResult">
+		SELECT * FROM record WHERE employerId=#{employerId}
+	</select>
+	<select id="list" parameterType="Map" resultMap="RecordResult">
+		select * from record
+			<where>
+			<if test="recordName!=null and recordName!='' ">
+				 and recordName like #{recordName}
+			</if>
+		</where>
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from record
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="Record">
+		insert into record values(null,#{employerId},#{recordName},#{content},#{remark})
+	</insert>
+	<update id="update" parameterType="Record">
+		update record
+		<set>
+			<if test="employerId!=null and employerId!=''">
+				employerId=#{employerId},
+			</if>
+			<if test="recordName!=null and recordName!=''">
+				recordName=#{recordName},
+			</if>
+			<if test="content!=null and content!=''">
+				content=#{content},
+			</if>
+			<if test="remark!=null and remark!=''">
+				remark=#{remark},
+			</if>
+		</set>
+		where ID=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from record where id=#{id}
+	</delete>
+</mapper> 

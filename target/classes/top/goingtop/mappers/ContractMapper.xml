@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.goingtop.dao.ContractDao">
+	<resultMap type="Contract" id="ContractResult">
+		<result property="id" column="id"/>
+		<result property="employerId" column="employerId"/>
+		<result property="startTime" column="startTime"/>
+		<result property="endTime" column="endTime"/>
+		<result property="job" column="job"/>
+		<result property="content" column="content"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+	<select id="findById" parameterType="Integer" resultMap="ContractResult">
+		select * from contract where id=#{id}
+	</select>
+	<select id="find" parameterType="Map" resultMap="ContractResult">
+		select * from contract
+			<where>
+			<if test="employerId!=null and employerId!='' ">
+				 and employerId like #{employerId}
+			</if>
+		</where>
+		ORDER BY endTime DESC
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
+		</if>
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="Long">
+		select count(*) from contract
+		<where>
+			<if test="id!=null and id!='' ">
+				 and id like #{id}
+			</if>
+		</where>
+	</select>
+	<insert id="add" parameterType="Contract">
+		insert into contract values(null,#{employerId},#{startTime},#{endTime},#{job},#{content},#{remark})
+	</insert>
+	<update id="update" parameterType="Contract">
+		update contract
+		<set>
+			<if test="employerId!=null and employerId!=''">
+				employerId=#{employerId},
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				startTime=#{startTime},
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				endTime=#{endTime},
+			</if>
+			<if test="job!=null and job!=''">
+				job=#{job},
+			</if>
+			<if test="content!=null and content!=''">
+				content=#{content},
+			</if>
+			<if test="remark!=null and remark!=''">
+				remark=#{remark},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Integer">
+		delete from contract where id=#{id}
+	</delete>
+</mapper> 
