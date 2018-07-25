@@ -1,0 +1,8 @@
+﻿人力资源管理系统
+GitHub源码地址：https://github.com/chengpenglog/HR
+云服务器访问项目地址：http://119.23.208.179:8080/HR
+角色	用户名	密码
+管理员	admin	111
+领导层	jack	111
+工人	10001	111
+工人	10002	111
